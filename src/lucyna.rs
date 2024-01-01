@@ -1,3 +1,4 @@
+use std::process::exit;
 use etherparse::{InternetSlice, SlicedPacket};
 use pcap::{Active, Capture, Device};
 use crate::parser;
@@ -16,21 +17,17 @@ impl Lucyna {
 
     }
     pub(crate) fn sniff(&mut self) {
-        let p = parser::LucynaParse::new();
+        let mut p = parser::LucynaParse::new();
         println!("Sniffer started!");
         while let Ok(packet) = self.cap.next_packet() {
-            println!("Got packet!");
 
             match SlicedPacket::from_ethernet(&packet) {
                 Err(value) => println!("Err {:?}", value),
                 Ok(value) => {
-                    println!("CALLED");
                     p.parse_packet(value);
-
-
                 }
             }
-
+            println!("{:?}", p.get_seen_ips());
         }
     }
 }
