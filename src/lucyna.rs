@@ -4,13 +4,15 @@ use pcap::{Active, Capture, Device};
 use crate::parser;
 
 pub(crate) struct Lucyna {
-    cap: Capture<Active>
+    cap: Capture<Active>,
+    seen_ips: Vec<String>
 }
 
 impl Lucyna {
     pub(crate) fn new() -> Lucyna {
         Lucyna {
-            cap: Device::lookup().unwrap().unwrap().open().unwrap()
+            cap: Device::lookup().unwrap().unwrap().open().unwrap(),
+            seen_ips: Vec::new()
         }
     }
     pub(crate) fn setup_sniffer(&self) {
@@ -27,7 +29,7 @@ impl Lucyna {
                     p.parse_packet(value);
                 }
             }
-            println!("{:?}", p.get_seen_ips());
+            //println!("{:?}", p.get_seen_ips());
         }
     }
 }
